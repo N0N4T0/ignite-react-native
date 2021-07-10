@@ -5,14 +5,14 @@ import {
   StyleSheet,
   TextInput,
   Platform,
-  FlatList
+  FlatList,
 } from 'react-native'
 import { Button } from '../components/Button'
 import { SkillCard } from '../components/SkillCard'
 
 export function Home() {
   // estado para armazenar nova Skill
-  const [newSkill, setNewSill] = useState('')
+  const [newSkill, setNewSkill] = useState('')
   // estado para armazenar todas as Skills
   const [mySkills, setMySkills] = useState([])
   // estado para exibir saudação
@@ -51,7 +51,7 @@ export function Home() {
           style={styles.input}
           placeholder="New skill"
           placeholderTextColor="#555"
-          onChangeText={setNewSill}
+          onChangeText={setNewSkill}
         />
 
         <Button onPress={handleAddSkill}/>
