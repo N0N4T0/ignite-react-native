@@ -10,16 +10,25 @@ import {
 import { Button } from '../components/Button'
 import { SkillCard } from '../components/SkillCard'
 
+interface SkillData {
+  id: string;
+  name: string;
+}
+
 export function Home() {
   // estado para armazenar nova Skill
   const [newSkill, setNewSkill] = useState('')
   // estado para armazenar todas as Skills
-  const [mySkills, setMySkills] = useState([])
+  const [mySkills, setMySkills] = useState<SkillData[]>([])
   // estado para exibir saudação
   const [greeting, setGreeting] = useState('')
 
   function handleAddSkill(){
-    setMySkills(oldState => [...oldState, newSkill])
+    const data = {
+      id: String(new Date().getTime()),
+      name: newSkill
+    }
+    setMySkills(oldState => [...oldState, data])
   }
 
   useEffect(() => {
@@ -63,7 +72,7 @@ export function Home() {
         <FlatList 
           showsVerticalScrollIndicator={false}
           data={mySkills}
-          keyExtractor={item => item}
+          keyExtractor={item => item.id}
           renderItem={({item}) => (
             <SkillCard skill={item}/>
           )}
