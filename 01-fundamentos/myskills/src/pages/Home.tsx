@@ -23,7 +23,7 @@ export function Home() {
   // estado para exibir saudação
   const [greeting, setGreeting] = useState('')
 
-  function handleAddSkill(){
+  function handleAddNewSkill(){
     const data = {
       id: String(new Date().getTime()),
       name: newSkill
@@ -63,7 +63,10 @@ export function Home() {
           onChangeText={setNewSkill}
         />
 
-        <Button onPress={handleAddSkill}/>
+        <Button 
+          title="Add"
+          onPress={handleAddNewSkill}
+        />
 
         <Text style={[styles.title, {marginVertical: 50}]}>
           My Skills
