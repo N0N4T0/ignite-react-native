@@ -25,7 +25,7 @@ export function Register(){
     // Definindo objeto no useState
     const [category, setCategory] = useState({
         key: 'category',
-        name: 'categoria',
+        name: 'Categoria',
     })
 
     function handleTransactionsTypeSelect(type: 'up' | 'down'){
@@ -71,7 +71,7 @@ export function Register(){
                     </TransactionsTypes>
                 
                     <CategorySelectButton 
-                        title="Categoria"
+                        title={category.name}
                         onPress={handleOpenSelectCategoryModal}
                     />
                 </Fields>
