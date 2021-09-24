@@ -83,18 +83,27 @@ export function Register(){
         if(category.key === 'category')
             return Alert.alert('Selecione a categoria')
             
-        const data ={
+        const newTransaction ={
             name: form.name,
             amount: form.amount,
             transactionType,
             category: category.key
         }
-        console.log(data)
+        console.log(newTransaction)
 
         try {
-            // no seguno parametro se esperado uma string, por isso é usado o
+            const data = await AsyncStorage.getItem(dataKey)
+            const currentData = data ? JSON.parse(data) : []
+            
+            // garantindo que os dados não serão sobrescritos
+            const dataFormatted = [
+                ...currentData,
+                newTransaction
+            ]
+
+            // no segundo parametro se esperado uma string, por isso é usado o
             //  JSON.stringfy no meu vetor data
-            await AsyncStorage.setItem(dataKey, JSON.stringify(data))
+            await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted))
 
         } catch (error) {
             console.log(error)
@@ -109,6 +118,12 @@ export function Register(){
         }
         
         loadData()
+
+        // async function removeAll(){
+        //     await AsyncStorage.removeItem(dataKey)
+        // }
+
+        // removeAll()
     }, [])
 
     return(
