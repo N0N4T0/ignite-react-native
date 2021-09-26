@@ -62,11 +62,10 @@ export function Dashboard(){
   // ]
 
   const [data, setData] = useState<DataListProps[]>([])
-  // descomentar para o remove.all()
-  // const dataKey = '@gofinances:transactions'
+  const dataKey = '@gofinances:transactions'
 
   async function loadTransaction(){
-    const dataKey = '@gofinances:transactions'
+    // const dataKey = '@gofinances:transactions'
     const response = await AsyncStorage.getItem(dataKey)
     const transactions = response ? JSON.parse(response) : []
 
@@ -100,13 +99,14 @@ export function Dashboard(){
     setData(transactionsFormatted)  
  }
 
+  //  remover todos AsyncStorage
+  async function removeAll(){
+    await AsyncStorage.removeItem(dataKey)
+  }
+
   // carregando lista
   useEffect(() => {    
     loadTransaction()
-
-    // async function removeAll(){
-    //     await AsyncStorage.removeItem(dataKey)
-    // }
 
     // removeAll()
   }, [])

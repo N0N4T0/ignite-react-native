@@ -99,7 +99,6 @@ export function Register(){
             category: category.key,
             date: new Date()
         }
-        // console.log(newTransaction)
 
         try {
             const dataKey = '@gofinances:transactions'
@@ -128,6 +127,7 @@ export function Register(){
             })
 
             navigation.navigate('Listagem')
+            // console.log(newTransaction)
 
         } catch (error) {
             console.log(error)
