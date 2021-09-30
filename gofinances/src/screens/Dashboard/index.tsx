@@ -27,6 +27,16 @@ export interface DataListProps extends TransactionCardProps {
   id: string;
 }
 
+interface HighlightProps {
+  amount: string
+}
+
+interface HighlightData {
+  entries: HighlightProps;
+  expensives: HighlightProps;
+  total: HighlightProps;
+}
+
 export function Dashboard(){
   // const data: DataListProps[] = [
   //   {
@@ -64,7 +74,8 @@ export function Dashboard(){
   //   }  
   // ]
 
-  const [data, setData] = useState<DataListProps[]>([])
+  const [transactions, setTransacions] = useState<DataListProps[]>([])
+  const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData)
   const dataKey = '@gofinances:transactions'
 
   async function loadTransactions(){
@@ -72,8 +83,17 @@ export function Dashboard(){
     const response = await AsyncStorage.getItem(dataKey)
     const transactions = response ? JSON.parse(response) : []
 
+    let entriesTotal = 0
+    let expensiveTotal = 0
+
     const transactionsFormatted: DataListProps[] = transactions
       .map((item: DataListProps) => {
+        if(item.type === 'positive'){
+          entriesTotal += Number(item.amount)
+        } else {
+          expensiveTotal =+ Number(item.amount)
+        }
+
         // formatando valor
         // transforma em numero com Number
         const amount = Number(item.amount)
@@ -99,7 +119,30 @@ export function Dashboard(){
         }
       })
     
-    setData(transactionsFormatted)  
+    setTransacions(transactionsFormatted)
+    
+    const total = entriesTotal - expensiveTotal
+
+    setHighlightData({
+      entries: {
+        amount: entriesTotal.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        })
+      },
+      expensives: {
+        amount: expensiveTotal.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        })
+      },
+      total: {
+        amount: total.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        })
+      }
+    })
  }
 
   //  remover todos AsyncStorage
@@ -142,19 +185,19 @@ export function Dashboard(){
         <HighlightCard
           type="up" 
           title="Entradas"
-          amount="R$17.400,00"
+          amount={highlightData.entries.amount}
           lastTransaction="Última entrada dia 13 de abril"
         />
         <HighlightCard 
           type="down" 
           title="Saidas"
-          amount="R$1259,00"
+          amount={highlightData.expensives.amount}
           lastTransaction="Última saida dia 03 de abril"
         />
         <HighlightCard 
           type="total"
           title="Total"
-          amount="R$16.141,00"
+          amount={highlightData.total.amount}
           lastTransaction="01 a 06 de abril"
         />
       </HighlightCards>
@@ -163,7 +206,7 @@ export function Dashboard(){
         <Title>Listagem</Title>
 
         <TransactionList
-          data={data}
+          data={transactions}
           keyExtractor={item => item.id}
           renderItem={({ item }) => <TransactionCard data={item}/>}
           
