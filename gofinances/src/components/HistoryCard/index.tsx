@@ -20,7 +20,6 @@ export function HistoryCard({
         <Container color={color}>
             <Title>{title}</Title>
             <Amount>{amount}</Amount>
-
         </Container>
     )
 }
