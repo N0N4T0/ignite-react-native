@@ -2,9 +2,11 @@ import React, {useEffect, useState} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { VictoryPie } from 'victory-native'
 import { RFValue } from 'react-native-responsive-fontsize'
+import { addMonths, subMonths, format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
-import {useTheme} from 'styled-components'
+import { useTheme } from 'styled-components'
 
 import { HistoryCard } from '../../components/HistoryCard'
 
@@ -39,9 +41,22 @@ interface CategoryData {
 }
 
 export function Resume(){
+    //Estado para armazenar a data selecionada 
+    const [selectedDate, setSelectedDate] = useState(new Date())  
+    // Estado para armazenar o total por catarias/
     const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([])
 
     const theme = useTheme()
+
+    // Função para lidar com alteração da data
+    function handleDateChange(action: 'next' | 'prev'){
+        // Biblioteca date-fns para lidar com datas
+        if(action === 'next'){
+            setSelectedDate(addMonths(selectedDate, 1))
+        } else {
+            setSelectedDate(subMonths(selectedDate, 1))
+        }
+    }
 
     async function loadData(){
         const dataKey = '@gofinances:transactions'
@@ -49,9 +64,14 @@ export function Resume(){
         const response = await AsyncStorage.getItem(dataKey)
         const responseFormatted = response ? JSON.parse(response) : []
 
-        // filtrando para saber se o type é negativo
+        // filtrando para saber se o type é negativo e se o ano é o mesmo e a data
         const expensives = responseFormatted
-            .filter((expensive: TransactionData) => expensive.type === 'negative')
+            .filter((expensive: TransactionData) => 
+                expensive.type === 'negative' && 
+                new Date(expensive.date).getMonth() === selectedDate.getMonth() &&
+                new Date(expensive.date).getFullYear() === selectedDate.getFullYear()
+            )
+        // console.log(expensives)
 
         // reduce = pega uma coleção e soma
         const expensivesTotal = expensives
@@ -59,7 +79,7 @@ export function Resume(){
                 return acumullator + Number(expensive.amount)
         }, 0)
 
-        console.log(expensivesTotal)
+        // console.log(expensivesTotal)
 
         const totalByCategory: CategoryData[] = []
 
@@ -99,9 +119,10 @@ export function Resume(){
         setTotalByCategories(totalByCategory)
     }
 
+    // toda ve que minha data selecionada mudar eu disparo o loadData()
     useEffect(() => {
         loadData()
-    }, [])
+    }, [selectedDate])
 
     return(
         <Container>
@@ -120,13 +141,15 @@ export function Resume(){
             >
 
                 <MonthSelect>
-                    <MontSelectButton>
+                    <MontSelectButton onPress={() => handleDateChange('prev')}>
                         <MonthSelectIcon name="chevron-left"/>
                     </MontSelectButton>
 
-                    <Month>Maio</Month>
+                    <Month>
+                        {format(selectedDate, 'MMMM, yyyy', {locale: ptBR})}
+                    </Month>
 
-                    <MontSelectButton>
+                    <MontSelectButton onPress={() => handleDateChange('next')}>
                     <MonthSelectIcon name="chevron-right"/>
                     </MontSelectButton>
                 </MonthSelect>
