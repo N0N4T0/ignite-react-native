@@ -117,7 +117,7 @@ export function Dashboard(){
         if(item.type === 'positive'){
           entriesTotal += Number(item.amount)
         } else {
-          expensiveTotal =+ Number(item.amount)
+          expensiveTotal += Number(item.amount)
         }
 
         // formatando valor
