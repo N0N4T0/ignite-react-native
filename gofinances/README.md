@@ -5,7 +5,25 @@
 
 ---
 
-<!--  <img src="https://github.com/N0N4T0/dnaForMarketing/blob/master/public/assets/dnaForMarketing.jpg" > -->
+<h3 align="center">
+   TELAS
+</h3>
+---
+
+ <div style="display: grid; grid-template-columns: repeat(3, 1fr);"> 
+      <img src="https://user-images.githubusercontent.com/39486464/149638424-a78ff1af-e83c-4470-ae73-b82177b28313.jpeg" height="550" width="310">
+      <img src="https://user-images.githubusercontent.com/39486464/149638555-b24bf4af-7b81-4bbc-b652-0841bf09b28c.png" height="550" width="310">
+      <img src="https://user-images.githubusercontent.com/39486464/149638561-57d8f196-3e16-495d-9a6b-c8fccf065810.png" height="550" width="310">
+</div>
+   
+<div style="display: grid; grid-template-columns: repeat(3, 1fr);"> 
+    <img src="https://user-images.githubusercontent.com/39486464/149638591-4b897c08-47cf-44df-8415-2353a1adf1cf.png" height="550" width="310">
+   <img src="https://user-images.githubusercontent.com/39486464/149638656-2ac870e6-060f-4c44-a2c2-2a5a4e16d55f.png" height="550" width="310"> 
+   <img src="https://user-images.githubusercontent.com/39486464/149638613-2a30dfac-2910-461a-b8dc-25f1ec0437fb.png" height="550" width="310"> 
+ </div>
+   
+
+
 
 ## Sobre o projeto 
 
@@ -15,10 +33,10 @@ BOOTCAMP IGNITE REACT NATIVE
 
 ## Tecnologias 
 
-- **CSS**
-- **SASS**
+- **STYLED COMPONENTS**
 - **REACT NATIVE**
 - **JAVASCRIPT**
+- **EXPO**
 
 ---
 
@@ -47,5 +65,8 @@ expo start
 ```
 
 5) Apontar a câmera do celular para o qrcode e o projeto executará no seu celular. Necessário primeiro baixar o EXPO na App Store.
+
+<img src="https://user-images.githubusercontent.com/39486464/149638684-c4cb04f1-8bdb-4580-a85f-6964a2182f5b.png"> 
+
 
 
