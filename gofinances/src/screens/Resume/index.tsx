@@ -45,7 +45,7 @@ interface CategoryData {
 
 export function Resume(){
     // Estado para carregamento da informação
-    const[isLoading, setIsLoading] = useState(true)
+    const[isLoading, setIsLoading] = useState(false)
     //Estado para armazenar a data selecionada 
     const [selectedDate, setSelectedDate] = useState(new Date())  
     // Estado para armazenar o total por catarias/
@@ -57,8 +57,6 @@ export function Resume(){
     function handleDateChange(action: 'next' | 'prev'){
         // Biblioteca date-fns para lidar com datas
 
-        setIsLoading(true)
-
         if(action === 'next'){
             setSelectedDate(addMonths(selectedDate, 1))
         } else {
@@ -67,6 +65,8 @@ export function Resume(){
     }
 
     async function loadData(){
+        setIsLoading(true)
+
         const dataKey = '@gofinances:transactions'
  
         const response = await AsyncStorage.getItem(dataKey)
@@ -129,13 +129,13 @@ export function Resume(){
     }
 
     // toda ve que minha data selecionada mudar eu disparo o loadData()
-    useEffect(() => {
-        loadData()
-    }, [selectedDate])
+    // useEffect(() => {
+    //     loadData()
+    // }, [])
 
     useFocusEffect(useCallback(() => {
         loadData()
-      }, []))
+      }, [selectedDate]))
 
     return(
         <Container>
