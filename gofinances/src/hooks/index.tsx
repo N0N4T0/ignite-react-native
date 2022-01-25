@@ -17,7 +17,7 @@ interface User {
 }
 
 interface IAuthContextData{
-    user: string;
+    user: User;
 }
 
 // Contexto com valor inicial = []
