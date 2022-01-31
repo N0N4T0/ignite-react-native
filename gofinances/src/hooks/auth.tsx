@@ -2,6 +2,7 @@ import React, {
     createContext, 
     ReactNode,
     useContext,
+    useEffect,
     useState
 } from "react"
 
@@ -43,6 +44,9 @@ const AuthContext  = createContext({} as IAuthContextData)
 
 function AuthProvider({children}: AuthProviderProps){
     const [user, setUser] = useState<User>({} as User)
+    const [userStorageLoading, setUserStorageLoading] = useState(true)
+
+    const userStorageKey = '@gofinances:user'
 
     async function signInWithGoogle(){
         try {
@@ -60,12 +64,15 @@ function AuthProvider({children}: AuthProviderProps){
 
                 // console.log(userInfo)
 
-                setUser({
+                const userLoggedIn = {
                     id: userInfo.id,
                     email: userInfo.email,
                     name: userInfo.given_name,
                     photo: userInfo.picture
-                })
+                  }
+                              
+                  setUser(userLoggedIn);
+                  AsyncStorage.setItem(userStorageKey, JSON.stringify(userLoggedIn));
             }
 
         } catch (error) {
@@ -101,6 +108,24 @@ function AuthProvider({children}: AuthProviderProps){
             throw new Error(error)
         }
     }
+
+    // Devido estado atualizar junto com uma atualização do app,
+    // o usuário autenticado era desconectado então usamos um useEffect
+    useEffect(()=>{
+        async function loadUserStorageDate() {
+            const userStoraged = await AsyncStorage.getItem(userStorageKey)
+
+            if(userStoraged){
+                const userLogged = JSON.parse(userStoraged) as User
+
+                setUser(userLogged)
+            }
+
+            setUserStorageLoading(false)
+        }
+
+        loadUserStorageDate()
+    }, [])
 
     return(
         <AuthContext.Provider value={{ 
