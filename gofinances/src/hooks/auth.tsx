@@ -30,6 +30,8 @@ interface IAuthContextData{
     user: User;
     signInWithGoogle(): Promise<void>;
     signInWithApple(): Promise<void>;
+    signOut(): Promise<void>;
+    userStorageLoading: boolean;
 }
 
 interface AuthorizationResponse{
@@ -48,6 +50,7 @@ function AuthProvider({children}: AuthProviderProps){
 
     const userStorageKey = '@gofinances:user'
 
+    // Login com google
     async function signInWithGoogle(){
         try {
             const RESPONSE_TYPE = 'token'
@@ -80,6 +83,7 @@ function AuthProvider({children}: AuthProviderProps){
         }
     }
 
+    // Login com Apple
     async function signInWithApple(){
         try {
             const credential = await AppleAuthentication.signInAsync({
@@ -90,23 +94,32 @@ function AuthProvider({children}: AuthProviderProps){
             });
 
             // A exclamação é para garantir que sempre vai ter
-            // if(credential){
-            //     const userLogged = {
-            //         id: String(credential.user),
-            //         email: credential.email!,
-            //         name: credential.fullName!.givenName!,
-            //         photo: undefined
-            //     }
+            if(credential){
+                const name = credential.fullName!.givenName!
+                const photo = `https://ui-avatars.com/api/?name=${name}&length=1`
 
-            //     setUser(userLogged)
-            //     await AsyncStorage.setItem('@gofinances:user', JSON.stringify(userLogged))
-            // }
+                const userLogged = {
+                    id: String(credential.user),
+                    email: credential.email!,
+                    name,
+                    photo
+                }
+
+                setUser(userLogged)
+                await AsyncStorage.setItem('@gofinances:user', JSON.stringify(userLogged))
+            }
 
             console.log(credential)
 
         } catch (error) {
             throw new Error(error)
         }
+    }
+
+    // Sign Out
+    async function signOut() {
+        setUser({} as User)
+        await AsyncStorage.removeItem(userStorageKey)
     }
 
     // Devido estado atualizar junto com uma atualização do app,
@@ -131,7 +144,9 @@ function AuthProvider({children}: AuthProviderProps){
         <AuthContext.Provider value={{ 
             user,
             signInWithGoogle,
-            signInWithApple
+            signInWithApple,
+            signOut,
+            userStorageLoading
         }}>
             {children}
         </AuthContext.Provider>
