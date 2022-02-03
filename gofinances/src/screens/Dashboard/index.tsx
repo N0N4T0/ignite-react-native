@@ -86,7 +86,7 @@ export function Dashboard(){
   const theme = useTheme()
   const {signOut, user} = useAuth()
 
-  const dataKey = '@gofinances:transactions'
+  const dataKey = `@gofinances:transactions_user:${user.id}`
 
   function getLastTransacionDate(
     collection: DataListProps[],
