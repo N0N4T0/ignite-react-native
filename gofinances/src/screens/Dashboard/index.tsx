@@ -92,12 +92,18 @@ export function Dashboard(){
     collection: DataListProps[],
     type: 'positive' | 'negative'
   ){
-    
+
+    const collectionFilttered = collection
+      .filter(transaction => transaction.type === type)
+
+    if(collectionFilttered.length === 0) {
+      return 0;
+    }
+
     // filtro de transações só de entrada
     // vai me retornar o máximo
     const lastTransaction = new Date( 
-      Math.max.apply(Math, collection
-        .filter(transaction => transaction.type === type)
+      Math.max.apply(Math, collectionFilttered
         .map(transaction => new Date(transaction.date).getTime())
       )
     )
@@ -151,7 +157,9 @@ export function Dashboard(){
 
     const lastTransactionEntries = getLastTransacionDate(transactions, 'positive')
     const lastTransactionExpensives = getLastTransacionDate(transactions, 'negative')
-    const totalInterval = `01 a ${lastTransactionExpensives}`
+    const totalInterval = lastTransactionExpensives === 0 
+      ? "Não há transações" 
+      : `01 a ${lastTransactionExpensives}`
     
     const total = entriesTotal - expensiveTotal
 
@@ -161,14 +169,18 @@ export function Dashboard(){
           style: 'currency',
           currency: 'BRL'
         }),
-        lastTransaction: `Última entrada dia ${lastTransactionEntries}`
+        lastTransaction: lastTransactionEntries === 0 
+          ? "Não há transações" 
+          : `Última entrada dia ${lastTransactionEntries}`
       },
       expensives: {
         amount: expensiveTotal.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL'
         }),
-        lastTransaction: `Última saída dia ${lastTransactionExpensives}`
+        lastTransaction: lastTransactionEntries === 0 
+          ? "Não há transações" 
+          : `Última saída dia ${lastTransactionExpensives}`
       },
       total: {
         amount: total.toLocaleString('pt-BR', {
